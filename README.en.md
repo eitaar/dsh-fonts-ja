@@ -64,7 +64,7 @@ Then restart `dsh web`.
 | --- | --- |
 | Family | Any name used to reference the font in the stack (e.g. `Inter`) |
 | woff2 URL | An http(s) direct link to the font file; it must be CORS-accessible (CDNs usually are) |
-| Weight | 400 Regular · 500 Medium · 600 Semibold · 700 Bold — **pick the weight your file actually is** (a wrong pick only makes the browser synthesize the weight) |
+| Weight | 400 Regular · 500 Medium · 600 Semibold · 700 Bold — **pick the weight your file actually is**. Download pages usually label it: Regular=400, Bold=700. A wrong pick won't break anything, the UI just shows a browser-synthesized "fake bold" |
 
 Example — importing Inter Regular from the Fontsource CDN as the UI font:
 
