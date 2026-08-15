@@ -58,7 +58,23 @@ Then restart `dsh web`.
 
 **Switching fonts:** Settings → General → Font row — preset cards apply live; "Default" restores the system stacks.
 
-**Importing custom fonts:** fill in the family name and a woff2 URL (http/https), pick a weight, and hit Add — it applies immediately; re-adding the same family+weight replaces the entry.
+**Importing custom fonts:** fill in the editor fields (UI font / Code font) and hit Add:
+
+| Field | Meaning |
+| --- | --- |
+| Family | Any name used to reference the font in the stack (e.g. `Inter`) |
+| woff2 URL | An http(s) direct link to the font file; it must be CORS-accessible (CDNs usually are) |
+| Weight | 400 Regular · 500 Medium · 600 Semibold · 700 Bold — **pick the weight your file actually is** (a wrong pick only makes the browser synthesize the weight) |
+
+Example — importing Inter Regular from the Fontsource CDN as the UI font:
+
+```
+Family: Inter
+woff2 URL: https://cdn.jsdelivr.net/npm/@fontsource/inter@5.3.0/files/inter-latin-400-normal.woff2
+Weight: 400 Regular
+```
+
+It applies immediately and survives reloads; re-adding the same family+weight replaces the old entry, and Remove deletes it.
 
 ## Plugin API
 
