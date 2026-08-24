@@ -33,10 +33,20 @@ test("emits no font-face for installed local families", () => {
   assert.doesNotMatch(css, /@font-face/);
 });
 
+test("falls back to the ui stack when chat is empty or invalid", () => {
+  const css = buildFontCss({ ui: ["Yu Gothic UI", "sans-serif"], chat: ["", 42], code: ["Consolas"], faces: [] });
+  assert.match(css, /--dsh-fonts-chat-family: "Yu Gothic UI", sans-serif/);
+  assert.match(css, /--dsw-font-markdown-base-font-family: var\(--dsh-fonts-chat-family, var\(--dsw-font-family\)\)/);
+});
+
 test("escapes css strings and emits validated remote faces", () => {
-  const css = buildFontCss({ ui: ["RemoteAcceptance"], chat: ["Yu Mincho"], code: ["Consolas"], faces: [{ family: "RemoteAcceptance", src: ["http://127.0.0.1:3080/plugins/dsh-fonts/fonts/inter-latin-400-normal.woff2"], weight: "400", display: "swap" }] });
+  const escapedFamily = "Remote\\Acceptance\"\r\n\fTail";
+  const escapedUrl = "http://127.0.0.1:3080/plugins/dsh-fonts/fonts/inter-latin-400-normal.woff2?x=quote\"\\";
+  const css = buildFontCss({ ui: [escapedFamily], chat: ["Yu Mincho"], code: ["Consolas"], faces: [{ family: escapedFamily, src: [escapedUrl], weight: "400", display: "swap" }] });
   assert.match(css, /@font-face/);
   assert.match(css, /format\("woff2"\)/);
+  assert.match(css, /Remote\\\\Acceptance\\"\\r\\n\\fTail/);
+  assert.match(css, /quote\\"\\\\/);
 });
 
 test("normalizes a three-role custom set", () => {

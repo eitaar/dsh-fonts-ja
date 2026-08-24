@@ -85,7 +85,7 @@ function safeCssToken(value, fallback) {
 
 export function buildFontCss(config = {}) {
   const ui = serializeFamily(config.ui);
-  const chat = serializeFamily(config.chat);
+  const chat = serializeFamily(config.chat) || ui;
   const code = serializeFamily(config.code);
   const chatFamily = "var(--dsh-fonts-chat-family, var(--dsw-font-family))";
   const markdown = MARKDOWN_TEXT_TOKENS.map((token) => [
