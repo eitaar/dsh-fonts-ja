@@ -39,6 +39,20 @@
         { "family": "Cascadia Code", "weight": "400", "file": "cascadia-code-latin-400-normal.woff2" },
         { "family": "Cascadia Code", "weight": "700", "file": "cascadia-code-latin-700-normal.woff2" }
       ]
+    },
+    {
+      "id": "japanese-gothic",
+      "ui": ["Yu Gothic UI", "Yu Gothic", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Meiryo", "sans-serif"],
+      "chat": ["Yu Gothic UI", "Yu Gothic", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Meiryo", "sans-serif"],
+      "code": ["UDEV Gothic 35NF", "Noto Sans Mono CJK JP", "Cascadia Mono", "Consolas", "monospace"],
+      "faces": []
+    },
+    {
+      "id": "japanese-mincho-chat",
+      "ui": ["Yu Gothic UI", "Yu Gothic", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Meiryo", "sans-serif"],
+      "chat": ["Yu Mincho", "YuMincho", "Hiragino Mincho ProN", "Noto Serif JP", "BIZ UDPMincho", "MS PMincho", "serif"],
+      "code": ["UDEV Gothic 35NF", "Noto Sans Mono CJK JP", "Cascadia Mono", "Consolas", "monospace"],
+      "faces": []
     }
   ]
 }

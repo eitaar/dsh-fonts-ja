@@ -55,6 +55,7 @@
   },
   "scripts": {
     "generate": "node scripts/gen-client.mjs",
+    "generate:check": "node scripts/gen-client.mjs --check",
     "test": "node --test"
   }
 }
