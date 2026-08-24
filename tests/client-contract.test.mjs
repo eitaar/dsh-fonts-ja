@@ -22,3 +22,23 @@ test("runtime migrates preferences and keeps the compatibility wrapper", async (
   assert.match(client, /selectCustom\(ui,\s*code\)/);
   assert.match(client, /chat:\s*ui/);
 });
+
+test("settings UI exposes three roles, source modes, and Japanese labels", async () => {
+  const template = await readFile("lib/client.tpl.js", "utf8");
+  assert.match(template, /data-font-role="ui"/);
+  assert.match(template, /data-font-role="chat"/);
+  assert.match(template, /data-font-role="code"/);
+  assert.match(template, /data-font-source="local"/);
+  assert.match(template, /data-font-source="woff2"/);
+  assert.match(template, /チャットフォント/);
+  assert.match(template, /インストール済みフォント/);
+  assert.match(template, /リモート WOFF2/);
+  assert.match(template, /設定 Settings 123/);
+  assert.match(
+    template,
+    /日本語の文章を読みやすく表示します。Markdown \*\*太字\*\* 123/,
+  );
+  assert.match(template, /const 日本語 = "font";/);
+  assert.match(template, /assertDictionaryKeyParity\(zh, en, ja\)/);
+  assert.match(template, /ctx\.locale\.register\(SETTINGS_NS,\s*\{\s*zh,\s*en,\s*ja/s);
+});
