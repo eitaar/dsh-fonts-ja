@@ -51,9 +51,10 @@ export function validateWoff2Url(value) {
   return true;
 }
 
-function validateFontSource(value) {
+function validateFontSource(value, { allowBundled = false } = {}) {
   if (validateWoff2Url(value)) return true;
-  return typeof value === "string"
+  return allowBundled
+    && typeof value === "string"
     && !CONTROL_CHARACTERS.test(value)
     && !value.includes("..")
     && BUNDLED_WOFF2_PATH.test(value);
@@ -92,7 +93,7 @@ function safeCssToken(value, fallback) {
   return typeof value === "string" && /^[a-zA-Z0-9 .%_-]+$/.test(value.trim()) ? value.trim() : fallback;
 }
 
-export function buildFontCss(config = {}) {
+export function buildFontCss(config = {}, { allowBundled = false } = {}) {
   const ui = serializeFamily(config.ui);
   const chat = serializeFamily(config.chat) || ui;
   const code = serializeFamily(config.code);
@@ -101,8 +102,8 @@ export function buildFontCss(config = {}) {
     `--dsw-font-markdown-${token}-font-family: ${chatFamily};`,
     `--dsw-font-markdown-${token}: var(--dsw-font-markdown-${token}-font-style, normal) var(--dsw-font-markdown-${token}-font-weight, 400) var(--dsw-font-markdown-${token}-font-size, 1rem) / var(--dsw-font-markdown-${token}-line-height, normal) ${chatFamily};`,
   ].join("")).join("");
-  const faces = Array.isArray(config.faces) ? config.faces.map(normalizeFace).filter(Boolean).flatMap((face) => {
-    const sources = face.src.filter(validateFontSource);
+  const faces = Array.isArray(config.faces) ? config.faces.map((face) => normalizeFace(face, { allowBundled })).filter(Boolean).flatMap((face) => {
+    const sources = face.src.filter((source) => validateFontSource(source, { allowBundled }));
     if (!sources.length) return [];
     const src = sources.map((url) => `url(${serializeCssString(url)}) format("woff2")`).join(",");
     const weight = safeCssToken(face.weight, "400");
@@ -112,13 +113,13 @@ export function buildFontCss(config = {}) {
   return `${faces}:root{--dsw-font-family: ${ui};--dsh-fonts-chat-family: ${chat};--ds-font-family-code: ${code};}body{${markdown}}`;
 }
 
-export function normalizeFace(face) {
+export function normalizeFace(face, { allowBundled = false } = {}) {
   if (!face || typeof face !== "object" || Array.isArray(face)) return null;
   const family = normalizeFamily(face.family);
   if (!family) return null;
   const hasSrc = Object.prototype.hasOwnProperty.call(face, "src");
   if (hasSrc && !Array.isArray(face.src)) return null;
-  const src = hasSrc ? [...new Set(face.src.filter(validateFontSource))] : [];
+  const src = hasSrc ? [...new Set(face.src.filter((source) => validateFontSource(source, { allowBundled })))] : [];
   if (hasSrc && face.src.length > 0 && src.length === 0) return null;
   const weight = typeof face.weight === "string" && face.weight.trim() ? face.weight.trim() : "400";
   const display = typeof face.display === "string" && face.display.trim() ? face.display.trim() : "swap";
@@ -158,14 +159,35 @@ export function normalizeCustomSet(set) {
   return result;
 }
 
-export function normalizePreset(preset) {
+/** Replace a role face by its normalized family and weight, or append it when new. */
+export function replaceFace(faces, face) {
+  const replacement = normalizeFace(face);
+  if (!replacement) return Array.isArray(faces) ? [...faces] : [];
+  let replaced = false;
+  const next = [];
+  for (const existing of Array.isArray(faces) ? faces : []) {
+    const normalized = normalizeFace(existing);
+    if (normalized && normalized.family === replacement.family && normalized.weight === replacement.weight) {
+      if (!replaced) next.push(replacement);
+      replaced = true;
+    } else {
+      next.push(existing);
+    }
+  }
+  if (!replaced) next.push(replacement);
+  return next;
+}
+
+export function normalizePreset(preset, { allowBundled = false } = {}) {
   if (!preset || typeof preset !== "object" || Array.isArray(preset) || typeof preset.id !== "string") return null;
+  const id = preset.id.trim();
+  if (!id) return null;
   const ui = normalizeStack(preset.ui);
   const chat = preset.chat === undefined ? (ui ? [...ui] : null) : normalizeStack(preset.chat);
   const code = normalizeStack(preset.code);
   if (!ui || !chat || !code) return null;
-  const faces = Array.isArray(preset.faces) ? preset.faces.map(normalizeFace).filter(Boolean) : [];
-  return { ...preset, id: preset.id.trim(), ui, chat, code, faces };
+  const faces = Array.isArray(preset.faces) ? preset.faces.map((face) => normalizeFace(face, { allowBundled })).filter(Boolean) : [];
+  return { ...preset, id, ui, chat, code, faces };
 }
 
 export function migratePrefs(value) {

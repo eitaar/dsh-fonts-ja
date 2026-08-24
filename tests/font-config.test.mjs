@@ -5,6 +5,7 @@ import {
   MARKDOWN_TEXT_TOKENS,
   migratePrefs,
   normalizeCustomSet,
+  replaceFace,
   normalizePreset,
   serializeFamily,
   validateWoff2Url,
@@ -33,22 +34,33 @@ test("emits no font-face for installed local families", () => {
   assert.doesNotMatch(css, /@font-face/);
 });
 
-test("emits bundled plugin faces but rejects unsafe relative sources", () => {
+test("emits explicitly allowed bundled plugin faces but rejects relative public sources", () => {
   const bundledCss = buildFontCss({
     ui: ["Inter"],
     chat: ["Inter"],
     code: ["Consolas"],
     faces: [{ family: "Inter", src: ["/plugins/dsh-fonts/fonts/inter-latin-400-normal.woff2"] }],
-  });
-  const unsafeCss = buildFontCss({
+  }, { allowBundled: true });
+  const publicCss = buildFontCss({
     ui: ["Inter"],
     chat: ["Inter"],
     code: ["Consolas"],
-    faces: [{ family: "Inter", src: ["../fonts/inter-latin-400-normal.woff2"] }],
+    faces: [{ family: "Inter", src: ["/plugins/dsh-fonts/fonts/inter-latin-400-normal.woff2"] }],
   });
   assert.match(bundledCss, /@font-face/);
   assert.match(bundledCss, /\/plugins\/dsh-fonts\/fonts\/inter-latin-400-normal\.woff2/);
-  assert.doesNotMatch(unsafeCss, /@font-face/);
+  assert.doesNotMatch(publicCss, /@font-face/);
+  assert.deepEqual(normalizeCustomSet({
+    ui: [{ family: "Inter", src: ["/plugins/dsh-fonts/fonts/inter-latin-400-normal.woff2"] }],
+    chat: [],
+    code: [],
+  }).ui, []);
+  assert.deepEqual(normalizePreset({
+    id: "third-party",
+    ui: ["Inter"],
+    code: ["Consolas"],
+    faces: [{ family: "Inter", src: ["/plugins/dsh-fonts/fonts/inter-latin-400-normal.woff2"] }],
+  }).faces, []);
 });
 
 test("falls back to the ui stack when chat is empty or invalid", () => {
@@ -97,6 +109,23 @@ test("uses preset ui as chat when chat is absent", () => {
   const preset = normalizePreset({ id: "legacy", ui: ["Inter", "'Segoe UI'"], code: ["JetBrains Mono"], faces: [] });
   assert.deepEqual(preset.ui, ["Inter", "Segoe UI"]);
   assert.deepEqual(preset.chat, ["Inter", "Segoe UI"]);
+});
+
+test("rejects whitespace-only preset ids", () => {
+  assert.equal(normalizePreset({ id: "  ", ui: ["Inter"], code: ["Consolas"], faces: [] }), null);
+});
+
+test("replaces an existing face with the same family and weight", () => {
+  assert.deepEqual(
+    replaceFace([
+      { family: "Meiryo", src: [], weight: "400", display: "swap" },
+      { family: "Meiryo", src: ["https://fonts.example/meiryo-700.woff2"], weight: "700", display: "swap" },
+    ], { family: "Meiryo", src: ["https://fonts.example/meiryo-400.woff2"], weight: "400", display: "swap" }),
+    [
+      { family: "Meiryo", src: ["https://fonts.example/meiryo-400.woff2"], weight: "400", display: "swap" },
+      { family: "Meiryo", src: ["https://fonts.example/meiryo-700.woff2"], weight: "700", display: "swap" },
+    ],
+  );
 });
 
 test("accepts only safe HTTP(S) WOFF2 URLs", () => {

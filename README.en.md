@@ -17,7 +17,7 @@ English | [中文](./README.md)
 
 DeepSeek Harness's web UI ships with system font stacks and no webfonts. dsh-Fonts turns fonts into a composable resource:
 
-- **Bundled presets**: JetBrains Mono + Inter, Fira Code + IBM Plex Sans, Cascadia Code, plus Japanese Gothic and Japanese Mincho-chat presets; all are shipped with the plugin for offline use (no CORS issues)
+- **Bundled presets**: JetBrains Mono + Inter, Fira Code + IBM Plex Sans, and Cascadia Code ship offline. Japanese Gothic and Japanese Mincho-chat presets list system-family names only; they include no Japanese font binaries.
 - **Custom import**: configure UI, chat body, and code fonts independently; the selection persists locally
 - **Plugin API**: a `ctx.fonts` registry service — other plugins can register or consume font presets via `ctx.get("fonts")`
 
@@ -65,7 +65,7 @@ Then restart `dsh web`.
 | Field | Meaning |
 | --- | --- |
 | Installed family | Enter only a family name; the named font **must already be installed on this device** and no font file is downloaded |
-| Remote WOFF2 | An HTTP(S) direct link whose pathname ends in `.woff2`; it must not contain credentials (username, password, or token) |
+| Remote WOFF2 | An HTTP(S) direct link whose pathname ends in `.woff2`; its URL authority must not contain username/password credentials |
 | Weight | 400 Regular · 500 Medium · 600 Semibold · 700 Bold — **pick the weight your file actually is**. Download pages usually label it: Regular=400, Bold=700. A wrong pick won't break anything, the UI just shows a browser-synthesized "fake bold" |
 
 Installed Japanese family examples include `Yu Gothic UI`, `Meiryo`, and `Yu Mincho` on Windows; `Hiragino Sans` and `Hiragino Mincho ProN` on macOS; and installed `Noto Sans JP`, `Noto Serif JP`, and `Noto Sans Mono CJK JP` on Linux. Availability always depends on the fonts installed on the current machine.
@@ -131,7 +131,7 @@ Full `FontPreset` / `FontSnapshot` / `FontRegistry` types live in `lib/types/cli
 ## How it works
 
 - The browser half provides the registry to the root context via `ctx.provide("fonts", registry)` at `apply` time
-- On selection changes it rewrites an injected `<style id="dsh-fonts">`: `@font-face` rules plus `:root` overrides of `--dsw-font-family` / `--ds-font-family-chat` / `--ds-font-family-code`
+- On selection changes it rewrites an injected `<style id="dsh-fonts-style">`: `@font-face` rules plus `:root` overrides of `--dsw-font-family` / `--dsh-fonts-chat-family` / `--ds-font-family-code`
 - The host half registers a `/plugins/dsh-fonts/fonts/*` route on `ctx.webServer`, serving the woff2 files bundled under `data/fonts/`
 - The selection persists in `localStorage` (`dsh-fonts:prefs`) and is restored at boot; a selected plugin-registered preset falls back to the default if that plugin is absent
 

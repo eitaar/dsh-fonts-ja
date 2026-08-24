@@ -17,7 +17,7 @@
 
 DeepSeek Harness 的 Web UI 默认使用系统字体栈，没有任何内置 webfont。dsh-Fonts 把字体变成可组合的资源：
 
-- **内置预设**：JetBrains Mono + Inter、Fira Code + IBM Plex Sans、Cascadia Code，以及面向日文的「日本语哥特」和「日本语明朝（聊天）」预设；随插件包离线分发（无需联网、无 CORS 问题）
+- **内置预设**：JetBrains Mono + Inter、Fira Code + IBM Plex Sans、Cascadia Code 随插件包离线分发。面向日文的「日本语哥特」和「日本语明朝（聊天）」预设仅列出系统字体家族名，不包含日文字体二进制文件。
 - **自定义导入**：可分别设置 UI、聊天正文和代码三种字体；选择持久化在本机
 - **插件 API**：提供 `ctx.fonts` 注册表服务，其他插件可以用 `ctx.get("fonts")` 注册或消费字体预设
 
@@ -65,7 +65,7 @@ dsh plugin --profile web add dsh-fonts
 | 字段 | 说明 |
 | --- | --- |
 | 已安装字体 | 只填写字体家族名；该名字对应的字体**必须已安装在当前设备**，不会下载字体文件 |
-| 远程 WOFF2 | 字体文件的 HTTP(S) 直链，路径必须以 `.woff2` 结尾且不得包含凭据（用户名、密码或 token） |
+| 远程 WOFF2 | 字体文件的 HTTP(S) 直链，路径必须以 `.woff2` 结尾，且 URL authority 中不得包含用户名/密码凭据 |
 | 字重 | 400 常规 · 500 中等 · 600 半粗 · 700 粗体，**选与文件实际粗细一致的字重**。下载页面通常会标注：Regular=400、Bold=700。选错不会报错，只是界面里的加粗效果会变成浏览器模拟的"假粗体" |
 
 可作为本地家族名的日文字体例子：Windows 的 `Yu Gothic UI`、`Meiryo`、`Yu Mincho`；macOS 的 `Hiragino Sans`、`Hiragino Mincho ProN`；Linux 上安装后的 `Noto Sans JP`、`Noto Serif JP`、`Noto Sans Mono CJK JP`。实际可用性取决于当前设备已安装的字体。
@@ -131,7 +131,7 @@ ctx.get("fonts")?.selectCustomSet({
 ## 工作原理
 
 - 浏览器半边在 `apply` 时通过 `ctx.provide("fonts", registry)` 把字体注册表挂到根上下文
-- 选择变更时重写注入的 `<style id="dsh-fonts">`：`@font-face` 规则 + `:root` 上的 `--dsw-font-family` / `--ds-font-family-chat` / `--ds-font-family-code` 覆盖
+- 选择变更时重写注入的 `<style id="dsh-fonts-style">`：`@font-face` 规则 + `:root` 上的 `--dsw-font-family` / `--dsh-fonts-chat-family` / `--ds-font-family-code` 覆盖
 - host 半边通过 `ctx.webServer` 注册 `/plugins/dsh-fonts/fonts/*` 路由，分发 `data/fonts/` 里随包打包的 woff2
 - 选择持久化在 `localStorage`（`dsh-fonts:prefs`），启动时恢复；插件注册的预设被选中后若该插件缺席，回退到默认
 
