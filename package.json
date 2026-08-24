@@ -54,6 +54,7 @@
     "@deepseek-ai/dsh-client-ui-primitives": "^0.1.0-rc.6"
   },
   "scripts": {
-    "generate": "node scripts/gen-client.mjs"
+    "generate": "node scripts/gen-client.mjs",
+    "test": "node --test"
   }
 }
