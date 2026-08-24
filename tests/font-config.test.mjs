@@ -1,11 +1,43 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
+  buildFontCss,
+  MARKDOWN_TEXT_TOKENS,
   migratePrefs,
   normalizeCustomSet,
   normalizePreset,
+  serializeFamily,
   validateWoff2Url,
 } from "../scripts/font-config.mjs";
+
+test("quotes named families but preserves generic families", () => {
+  assert.equal(serializeFamily(["Yu Gothic UI", "sans-serif"]), '"Yu Gothic UI", sans-serif');
+});
+
+test("builds independent ui chat and code variables", () => {
+  const css = buildFontCss({ ui: ["Yu Gothic UI", "sans-serif"], chat: ["Yu Mincho", "serif"], code: ["UDEV Gothic 35NF", "monospace"], faces: [] });
+  assert.match(css, /--dsw-font-family: "Yu Gothic UI", sans-serif/);
+  assert.match(css, /--dsh-fonts-chat-family: "Yu Mincho", serif/);
+  assert.match(css, /--ds-font-family-code: "UDEV Gothic 35NF", monospace/);
+  for (const token of MARKDOWN_TEXT_TOKENS) {
+    assert.match(css, new RegExp("--dsw-font-markdown-" + token + ":"));
+    assert.match(css, new RegExp("--dsw-font-markdown-" + token + "-font-family:"));
+  }
+  assert.doesNotMatch(css, /--dsw-font-markdown-code:/);
+  assert.doesNotMatch(css, /--dsw-font-markdown-code-block:/);
+  assert.doesNotMatch(css, /--dsw-font-markdown-code-block-small:/);
+});
+
+test("emits no font-face for installed local families", () => {
+  const css = buildFontCss({ ui: ["Meiryo"], chat: ["Yu Mincho"], code: ["Consolas"], faces: [{ family: "Meiryo", src: [] }] });
+  assert.doesNotMatch(css, /@font-face/);
+});
+
+test("escapes css strings and emits validated remote faces", () => {
+  const css = buildFontCss({ ui: ["RemoteAcceptance"], chat: ["Yu Mincho"], code: ["Consolas"], faces: [{ family: "RemoteAcceptance", src: ["http://127.0.0.1:3080/plugins/dsh-fonts/fonts/inter-latin-400-normal.woff2"], weight: "400", display: "swap" }] });
+  assert.match(css, /@font-face/);
+  assert.match(css, /format\("woff2"\)/);
+});
 
 test("normalizes a three-role custom set", () => {
   assert.deepEqual(

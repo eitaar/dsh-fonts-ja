@@ -1,5 +1,34 @@
 export const PREFS_VERSION = 2;
 export const FONT_ROLES = ["ui", "chat", "code"];
+export const MARKDOWN_TEXT_TOKENS = [
+  "h1",
+  "h2",
+  "h3",
+  "h4",
+  "base",
+  "base-strong",
+  "base-italic",
+  "base-strong-italic",
+  "small",
+  "small-strong",
+  "small-italic",
+  "small-strong-italic",
+  "table",
+  "table-head",
+];
+
+const GENERIC_FAMILIES = new Set([
+  "serif",
+  "sans-serif",
+  "monospace",
+  "cursive",
+  "fantasy",
+  "system-ui",
+  "ui-serif",
+  "ui-sans-serif",
+  "ui-monospace",
+  "ui-rounded",
+]);
 
 const CONTROL_CHARACTERS = /[\u0000-\u001f\u007f]/;
 
@@ -30,6 +59,48 @@ function normalizeFamily(value) {
     return unquoted || null;
   }
   return family;
+}
+
+function serializeCssString(value) {
+  return `"${String(value)
+    .replaceAll("\\", "\\\\")
+    .replaceAll('"', '\\"')
+    .replaceAll("\r", "\\r")
+    .replaceAll("\n", "\\n")
+    .replaceAll("\f", "\\f")}"`;
+}
+
+export function serializeFamily(families) {
+  if (!Array.isArray(families)) return "";
+  return families
+    .map((family) => normalizeFamily(family))
+    .filter(Boolean)
+    .map((family) => GENERIC_FAMILIES.has(family) ? family : serializeCssString(family))
+    .join(", ");
+}
+
+function safeCssToken(value, fallback) {
+  return typeof value === "string" && /^[a-zA-Z0-9 .%_-]+$/.test(value.trim()) ? value.trim() : fallback;
+}
+
+export function buildFontCss(config = {}) {
+  const ui = serializeFamily(config.ui);
+  const chat = serializeFamily(config.chat);
+  const code = serializeFamily(config.code);
+  const chatFamily = "var(--dsh-fonts-chat-family, var(--dsw-font-family))";
+  const markdown = MARKDOWN_TEXT_TOKENS.map((token) => [
+    `--dsw-font-markdown-${token}-font-family: ${chatFamily};`,
+    `--dsw-font-markdown-${token}: var(--dsw-font-markdown-${token}-font-style, normal) var(--dsw-font-markdown-${token}-font-weight, 400) var(--dsw-font-markdown-${token}-font-size, 1rem) / var(--dsw-font-markdown-${token}-line-height, normal) ${chatFamily};`,
+  ].join("")).join("");
+  const faces = Array.isArray(config.faces) ? config.faces.map(normalizeFace).filter(Boolean).flatMap((face) => {
+    const sources = face.src.filter(validateWoff2Url);
+    if (!sources.length) return [];
+    const src = sources.map((url) => `url(${serializeCssString(url)}) format("woff2")`).join(",");
+    const weight = safeCssToken(face.weight, "400");
+    const display = safeCssToken(face.display, "swap");
+    return [`@font-face{font-family:${serializeCssString(face.family)};font-style:normal;font-weight:${weight};font-display:${display};src:${src};}`];
+  }).join("") : "";
+  return `${faces}:root{--dsw-font-family: ${ui};--dsh-fonts-chat-family: ${chat};--ds-font-family-code: ${code};}body{${markdown}}`;
 }
 
 export function normalizeFace(face) {
