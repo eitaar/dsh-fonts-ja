@@ -9,19 +9,21 @@ export interface FontFaceSpec {
   /** font-family name. */
   family: string
   /** woff2 source URLs (bundled faces point at the plugin's host route). */
-  src: string[]
+  src?: string[]
   /** CSS font-weight; defaults to 400. */
   weight?: string
   /** CSS font-display; defaults to 'swap'. */
   display?: 'swap' | 'auto'
 }
 
-/** One selectable font preset: UI and code stacks plus their faces. */
+/** One selectable font preset: UI, chat, and code stacks plus their faces. */
 export interface FontPreset {
   id: string
   label?: string
   /** --dsw-font-family stack (family names, no commas needed). */
   ui: string[]
+  /** --dsh-fonts-chat-family stack; defaults to the UI stack when omitted. */
+  chat?: string[]
   /** --ds-font-family-code stack. */
   code: string[]
   faces: FontFaceSpec[]
@@ -30,6 +32,7 @@ export interface FontPreset {
 /** The user-imported custom set (independent of any preset). */
 export interface CustomFontSet {
   ui: FontFaceSpec[]
+  chat: FontFaceSpec[]
   code: FontFaceSpec[]
 }
 
@@ -55,6 +58,8 @@ export interface FontRegistry {
   /** Select a preset id; "system" and "custom" are built-in ids. */
   select(id: string): void
   /** Apply a user-imported custom set (empty lists clear it). */
+  selectCustomSet(set: CustomFontSet): void
+  /** @deprecated Use selectCustomSet. Chat will use the UI stack. */
   selectCustom(ui: FontFaceSpec[], code: FontFaceSpec[]): void
   clearCustom(): void
   getSnapshot(): FontSnapshot
