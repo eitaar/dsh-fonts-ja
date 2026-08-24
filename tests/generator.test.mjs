@@ -20,6 +20,13 @@ test("preset data contains Japanese Gothic and Mincho-chat choices", async () =>
   );
 });
 
+test("system fallback stacks retain Japanese coverage for custom font failures", async () => {
+  const raw = JSON.parse(await readFile("data/presets.json", "utf8"));
+  const system = validatePresetData(raw).find((preset) => preset.id === "system");
+  assert.ok(system.ui.includes("Meiryo"));
+  assert.ok(system.code.includes("Noto Sans Mono CJK JP"));
+});
+
 test("preset validation defaults a missing chat stack to the UI stack", () => {
   const [preset] = validatePresetData({
     presets: [{ id: "legacy", ui: ["Inter"], code: ["Consolas"], faces: [] }],

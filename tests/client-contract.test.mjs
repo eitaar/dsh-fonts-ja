@@ -25,6 +25,17 @@ test("template and generated runtime migrate preferences and keep the compatibil
   }
 });
 
+test("selecting Default clears custom preferences before persisting", async () => {
+  for (const filename of ["lib/client.tpl.js", "lib/client.js"]) {
+    const client = await readFile(filename, "utf8");
+    assert.match(
+      client,
+      /function select\(id\)\s*\{[\s\S]*?if \(id === DEFAULT_ID\) custom = null;[\s\S]*?persist\(\);/,
+      filename,
+    );
+  }
+});
+
 test("settings UI exposes three roles, source modes, and Japanese labels", async () => {
   const template = await readFile("lib/client.tpl.js", "utf8");
   assert.match(template, /data-font-role="ui"/);
