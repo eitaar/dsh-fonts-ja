@@ -33,6 +33,24 @@ test("emits no font-face for installed local families", () => {
   assert.doesNotMatch(css, /@font-face/);
 });
 
+test("emits bundled plugin faces but rejects unsafe relative sources", () => {
+  const bundledCss = buildFontCss({
+    ui: ["Inter"],
+    chat: ["Inter"],
+    code: ["Consolas"],
+    faces: [{ family: "Inter", src: ["/plugins/dsh-fonts/fonts/inter-latin-400-normal.woff2"] }],
+  });
+  const unsafeCss = buildFontCss({
+    ui: ["Inter"],
+    chat: ["Inter"],
+    code: ["Consolas"],
+    faces: [{ family: "Inter", src: ["../fonts/inter-latin-400-normal.woff2"] }],
+  });
+  assert.match(bundledCss, /@font-face/);
+  assert.match(bundledCss, /\/plugins\/dsh-fonts\/fonts\/inter-latin-400-normal\.woff2/);
+  assert.doesNotMatch(unsafeCss, /@font-face/);
+});
+
 test("falls back to the ui stack when chat is empty or invalid", () => {
   const css = buildFontCss({ ui: ["Yu Gothic UI", "sans-serif"], chat: ["", 42], code: ["Consolas"], faces: [] });
   assert.match(css, /--dsh-fonts-chat-family: "Yu Gothic UI", sans-serif/);

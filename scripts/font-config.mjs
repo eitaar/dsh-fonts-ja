@@ -31,6 +31,7 @@ const GENERIC_FAMILIES = new Set([
 ]);
 
 const CONTROL_CHARACTERS = /[\u0000-\u001f\u007f]/;
+const BUNDLED_WOFF2_PATH = /^\/plugins\/dsh-fonts\/fonts\/[A-Za-z0-9][A-Za-z0-9._-]*\.woff2$/i;
 
 export function validateWoff2Url(value) {
   if (typeof value !== "string" || CONTROL_CHARACTERS.test(value)) return false;
@@ -48,6 +49,14 @@ export function validateWoff2Url(value) {
     return false;
   }
   return true;
+}
+
+function validateFontSource(value) {
+  if (validateWoff2Url(value)) return true;
+  return typeof value === "string"
+    && !CONTROL_CHARACTERS.test(value)
+    && !value.includes("..")
+    && BUNDLED_WOFF2_PATH.test(value);
 }
 
 function normalizeFamily(value) {
@@ -93,7 +102,7 @@ export function buildFontCss(config = {}) {
     `--dsw-font-markdown-${token}: var(--dsw-font-markdown-${token}-font-style, normal) var(--dsw-font-markdown-${token}-font-weight, 400) var(--dsw-font-markdown-${token}-font-size, 1rem) / var(--dsw-font-markdown-${token}-line-height, normal) ${chatFamily};`,
   ].join("")).join("");
   const faces = Array.isArray(config.faces) ? config.faces.map(normalizeFace).filter(Boolean).flatMap((face) => {
-    const sources = face.src.filter(validateWoff2Url);
+    const sources = face.src.filter(validateFontSource);
     if (!sources.length) return [];
     const src = sources.map((url) => `url(${serializeCssString(url)}) format("woff2")`).join(",");
     const weight = safeCssToken(face.weight, "400");
@@ -109,7 +118,7 @@ export function normalizeFace(face) {
   if (!family) return null;
   const hasSrc = Object.prototype.hasOwnProperty.call(face, "src");
   if (hasSrc && !Array.isArray(face.src)) return null;
-  const src = hasSrc ? [...new Set(face.src.filter(validateWoff2Url))] : [];
+  const src = hasSrc ? [...new Set(face.src.filter(validateFontSource))] : [];
   if (hasSrc && face.src.length > 0 && src.length === 0) return null;
   const weight = typeof face.weight === "string" && face.weight.trim() ? face.weight.trim() : "400";
   const display = typeof face.display === "string" && face.display.trim() ? face.display.trim() : "swap";
