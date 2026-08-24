@@ -56,6 +56,12 @@ test("rendered client has no unresolved generation markers", async () => {
   assert.match(output, /function buildFontCss/);
 });
 
+test("checked-in client matches generated output", async () => {
+  const expected = await renderClient();
+  const actual = await readFile("lib/client.js", "utf8");
+  assert.equal(actual, expected, "run npm run generate and commit lib/client.js");
+});
+
 test("writeClient check mode rejects drift without modifying the output", async () => {
   const directory = await mkdtemp(join(tmpdir(), "dsh-fonts-generator-"));
   const outputPath = join(directory, "client.js");

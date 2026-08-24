@@ -15,12 +15,14 @@ test("types expose chat and the new custom-set API", async () => {
   assert.match(declarations, /clearCustom\(\): void/);
 });
 
-test("runtime migrates preferences and keeps the compatibility wrapper", async () => {
-  const client = await readFile("lib/client.js", "utf8");
-  assert.match(client, /version:\s*PREFS_VERSION/);
-  assert.match(client, /selectCustomSet/);
-  assert.match(client, /selectCustom\(ui,\s*code\)/);
-  assert.match(client, /chat:\s*ui/);
+test("template and generated runtime migrate preferences and keep the compatibility wrapper", async () => {
+  for (const filename of ["lib/client.tpl.js", "lib/client.js"]) {
+    const client = await readFile(filename, "utf8");
+    assert.match(client, /version:\s*PREFS_VERSION/, filename);
+    assert.match(client, /selectCustomSet/, filename);
+    assert.match(client, /selectCustom\(ui,\s*code\)/, filename);
+    assert.match(client, /chat:\s*ui/, filename);
+  }
 });
 
 test("settings UI exposes three roles, source modes, and Japanese labels", async () => {
