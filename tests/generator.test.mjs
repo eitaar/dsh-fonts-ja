@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, writeFile } from "node:fs/promises";
+import { mkdtemp, readFile, stat, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
@@ -12,12 +12,29 @@ import {
 test("preset data contains Japanese Gothic and Mincho-chat choices", async () => {
   const raw = JSON.parse(await readFile("data/presets.json", "utf8"));
   const presets = validatePresetData(raw);
-  assert.ok(presets.some((preset) => preset.id === "japanese-gothic"));
-  assert.ok(presets.some((preset) => preset.id === "japanese-mincho-chat"));
+  const gothic = presets.find((preset) => preset.id === "japanese-gothic");
+  const mincho = presets.find((preset) => preset.id === "japanese-mincho-chat");
+  assert.ok(gothic);
+  assert.ok(mincho);
+  assert.deepEqual(gothic.faces, [{
+    family: "Noto Sans JP",
+    weight: "400",
+    display: "swap",
+    file: "noto-sans-jp-400-normal.woff2",
+  }]);
+  assert.deepEqual(mincho.faces, gothic.faces);
   assert.deepEqual(
-    presets.find((preset) => preset.id === "japanese-mincho-chat").chat.slice(0, 2),
+    mincho.chat.slice(0, 2),
     ["Yu Mincho", "YuMincho"],
   );
+});
+
+test("the bundled Noto Sans JP file and license are present", async () => {
+  const font = await stat("data/fonts/noto-sans-jp-400-normal.woff2");
+  assert.ok(font.isFile());
+  assert.ok(font.size > 1_000_000, "the Japanese face should not be a tiny placeholder");
+  const license = await readFile("data/fonts/LICENSE-noto-sans-jp-OFL.txt", "utf8");
+  assert.match(license, /SIL OPEN FONT LICENSE Version 1\.1/);
 });
 
 test("system fallback stacks retain Japanese coverage for custom font failures", async () => {

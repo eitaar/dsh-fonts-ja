@@ -9,7 +9,7 @@
 [![GitHub contributors](https://img.shields.io/github/contributors/eitaar/dsh-fonts-ja)](https://github.com/eitaar/dsh-fonts-ja/graphs/contributors)
 [![License](https://img.shields.io/github/license/eitaar/dsh-fonts-ja)](./LICENSE)
 
-[English](./README.en.md) | 中文
+[English](./README.en.md) | 中文 | [日本語](./README.ja.md)
 
 </div>
 
@@ -17,7 +17,7 @@
 
 DeepSeek Harness 的 Web UI 默认使用系统字体栈，没有任何内置 webfont。dsh-fonts-ja 是从 [zhijun-dai/dsh-Fonts](https://github.com/zhijun-dai/dsh-Fonts) fork 的日文增强版：
 
-- **内置预设**：JetBrains Mono + Inter、Fira Code + IBM Plex Sans、Cascadia Code 随插件包离线分发。面向日文的「日本语哥特」和「日本语明朝（聊天）」预设仅列出系统字体家族名，不包含日文字体二进制文件。
+- **内置预设**：JetBrains Mono + Inter、Fira Code + IBM Plex Sans、Cascadia Code，以及 Noto Sans JP Regular 随插件包离线分发。面向日文的「日本语哥特」预设会为 UI 和聊天正文加载内置 Noto Sans JP；「日本语明朝（聊天）」保留 Noto Sans JP 的哥特 UI，同时优先使用系统明朝字体显示聊天正文。
 - **自定义导入**：可分别设置 UI、聊天正文和代码三种字体；选择持久化在本机
 - **插件 API**：提供 `ctx.fonts` 注册表服务，其他插件可以用 `ctx.get("fonts")` 注册或消费字体预设
 
@@ -61,7 +61,7 @@ dsh plugin --profile web add dsh-fonts-ja
 
 **切换字体：** 设置 → 通用 → 字体行，点击预设卡片实时应用；选择"默认"恢复系统字体栈。
 
-**日文字体预设：**「日本语哥特」将 UI、聊天和代码分别设为日文哥特/等宽候选；「日本语明朝（聊天）」保留哥特 UI 与等宽代码，但为聊天正文优先使用明朝体。三种角色互相独立：UI 影响界面，聊天影响消息正文，代码影响代码块。
+**日文字体预设：**「日本语哥特」将 UI、聊天和代码分别设为日文哥特/等宽候选，并随包加载 Noto Sans JP Regular；「日本语明朝（聊天）」保留 Noto Sans JP 哥特 UI 与等宽代码，但为聊天正文优先使用明朝体。三种角色互相独立：UI 影响界面，聊天影响消息正文，代码影响代码块。
 
 **导入自定义字体：** 在字体行的编辑区为每个角色（UI / 聊天 / 代码）选择来源后添加字体：
 
@@ -138,12 +138,6 @@ ctx.get("fonts")?.selectCustomSet({
 - host 半边继续通过 `ctx.webServer` 注册兼容性的 `/plugins/dsh-fonts/fonts/*` 路由，分发 `data/fonts/` 里随包打包的 woff2
 - 选择持久化在 `localStorage`（`dsh-fonts:prefs`），启动时恢复；插件注册的预设被选中后若该插件缺席，回退到默认
 
-## 已知限制
-
-- 部分组件硬编码了 `Inter, var(--dsw-font-family)` 优先栈（如工作区浏览器），这些位置装了 Inter 的系统上仍显示 Inter
-- 捆绑字体为 latin 子集（体积 ~280KB）；中文按字体栈尾部回退到系统字体（PingFang SC / Microsoft YaHei）
-- 自定义导入仅支持 woff2 直链（http/https）
-
 ## 开发检查
 
 运行完整检查（生成物是否漂移、host/client 语法和测试）：
@@ -151,6 +145,14 @@ ctx.get("fonts")?.selectCustomSet({
 ```sh
 npm run check
 ```
+
+贡献流程见 [CONTRIBUTING.ja.md](./CONTRIBUTING.ja.md)（日文）和 [CONTRIBUTING.md](./CONTRIBUTING.md)（English/中文 notes）。
+
+## 已知限制
+
+- 部分组件硬编码了 `Inter, var(--dsw-font-family)` 优先栈（如工作区浏览器），这些位置装了 Inter 的系统上仍显示 Inter
+- Latin 字体仍为子集（约 280KB）；日文预设另含完整的 Noto Sans JP Regular WOFF2，因此安装包会明显增大。其他 CJK 字形按字体栈尾部回退到系统字体（PingFang SC / Microsoft YaHei）
+- 自定义导入仅支持 woff2 直链（http/https）
 
 ## 字体致谢
 
@@ -161,6 +163,7 @@ npm run check
 - [Fira Code](https://github.com/tonsky/FiraCode) — The Fira Code Project Authors
 - [IBM Plex Sans](https://github.com/IBM/plex) — IBM Corp.
 - [Cascadia Code](https://github.com/microsoft/cascadia-code) — Microsoft
+- [Noto Sans CJK JP](https://github.com/notofonts/noto-cjk) — The Noto Project Authors
 
 ## 💝 致谢
 

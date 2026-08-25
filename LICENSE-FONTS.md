@@ -11,3 +11,10 @@ that font as data/fonts/LICENSE-*.txt.
 - IBM Plex Sans — Copyright © 2017 IBM Corp., Reserved Font Name "Plex"
 - Cascadia Code — Copyright (c) 2019 - Present, Microsoft Corporation,
   Reserved Font Name Cascadia Code
+- Noto Sans CJK JP — Copyright © 2014–2021 Adobe
+
+Noto Sans JP is derived from the Japanese Noto CJK distribution. Its complete
+SIL Open Font License 1.1 text is preserved in
+`data/fonts/LICENSE-noto-sans-jp-OFL.txt`.
+The CSS family alias used by the preset is `Noto Sans JP`; the font metadata
+retains the upstream `Noto Sans CJK JP` family name.

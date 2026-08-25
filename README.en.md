@@ -9,7 +9,7 @@
 [![GitHub contributors](https://img.shields.io/github/contributors/eitaar/dsh-fonts-ja)](https://github.com/eitaar/dsh-fonts-ja/graphs/contributors)
 [![License](https://img.shields.io/github/license/eitaar/dsh-fonts-ja)](./LICENSE)
 
-English | [中文](./README.md)
+English | [中文](./README.md) | [日本語](./README.ja.md)
 
 </div>
 
@@ -17,7 +17,7 @@ English | [中文](./README.md)
 
 DeepSeek Harness's web UI ships with system font stacks and no webfonts. dsh-fonts-ja is the Japanese-focused fork of [zhijun-dai/dsh-Fonts](https://github.com/zhijun-dai/dsh-Fonts):
 
-- **Bundled presets**: JetBrains Mono + Inter, Fira Code + IBM Plex Sans, and Cascadia Code ship offline. Japanese Gothic and Japanese Mincho-chat presets list system-family names only; they include no Japanese font binaries.
+- **Bundled presets**: JetBrains Mono + Inter, Fira Code + IBM Plex Sans, Cascadia Code, and Noto Sans JP Regular ship offline. The Japanese Gothic preset loads the bundled Noto Sans JP for UI and chat; Japanese Mincho chat keeps that Gothic UI while preferring system Mincho families for chat prose.
 - **Custom import**: configure UI, chat body, and code fonts independently; the selection persists locally
 - **Plugin API**: a `ctx.fonts` registry service — other plugins can register or consume font presets via `ctx.get("fonts")`
 
@@ -61,7 +61,7 @@ Then restart `dsh web`.
 
 **Switching fonts:** Settings → General → Font row — preset cards apply live; "Default" restores the system stacks.
 
-**Japanese presets:** Japanese Gothic assigns Japanese sans-serif/monospace candidates to UI, chat, and code. Japanese Mincho chat keeps a Gothic UI and monospace code stack while preferring Mincho for chat text. The three roles are independent: UI affects the application chrome, chat affects message prose, and code affects code blocks.
+**Japanese presets:** Japanese Gothic assigns Japanese sans-serif/monospace candidates to UI, chat, and code and loads the bundled Noto Sans JP Regular face. Japanese Mincho chat keeps Noto Sans JP for Gothic UI and monospace code while preferring system Mincho families for chat text. The three roles are independent: UI affects the application chrome, chat affects message prose, and code affects code blocks.
 
 **Importing custom fonts:** choose a source and add a font for each role (UI / Chat / Code):
 
@@ -138,12 +138,6 @@ Full `FontPreset` / `FontSnapshot` / `FontRegistry` types live in `lib/types/cli
 - The host half keeps the compatible `/plugins/dsh-fonts/fonts/*` route on `ctx.webServer`, serving the woff2 files bundled under `data/fonts/`
 - The selection persists in `localStorage` (`dsh-fonts:prefs`) and is restored at boot; a selected plugin-registered preset falls back to the default if that plugin is absent
 
-## Known limitations
-
-- Some components hardcode an `Inter, var(--dsw-font-family)` stack (e.g. the workspace browser) — those keep Inter on systems that have it installed
-- Bundled fonts are latin subsets (~280KB total); CJK text falls back through the stack tail to system fonts (PingFang SC / Microsoft YaHei)
-- Custom imports accept woff2 URLs only (http/https)
-
 ## Development check
 
 Run the complete generated-artifact, host/client syntax, and test check:
@@ -151,6 +145,14 @@ Run the complete generated-artifact, host/client syntax, and test check:
 ```sh
 npm run check
 ```
+
+See [CONTRIBUTING.ja.md](./CONTRIBUTING.ja.md) for the Japanese contribution guide and [CONTRIBUTING.md](./CONTRIBUTING.md) for the existing notes.
+
+## Known limitations
+
+- Some components hardcode an `Inter, var(--dsw-font-family)` stack (e.g. the workspace browser) — those keep Inter on systems that have it installed
+- Latin bundles remain subsets (~280KB total); the Japanese presets also ship a full Noto Sans JP Regular WOFF2, so the package is larger. Other CJK text falls back through the stack tail to system fonts (PingFang SC / Microsoft YaHei)
+- Custom imports accept woff2 URLs only (http/https)
 
 ## Font credits
 
@@ -161,6 +163,7 @@ Source code and plugin modifications are licensed under the MIT License in `LICE
 - [Fira Code](https://github.com/tonsky/FiraCode) — The Fira Code Project Authors
 - [IBM Plex Sans](https://github.com/IBM/plex) — IBM Corp.
 - [Cascadia Code](https://github.com/microsoft/cascadia-code) — Microsoft
+- [Noto Sans CJK JP](https://github.com/notofonts/noto-cjk) — The Noto Project Authors
 
 ## 💝 Thanks
 

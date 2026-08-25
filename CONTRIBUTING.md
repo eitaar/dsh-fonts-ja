@@ -1,5 +1,7 @@
 # Contributing
 
+日本語の手順は [CONTRIBUTING.ja.md](./CONTRIBUTING.ja.md) を参照してください。
+
 ## 再生成流程
 
 `lib/client.js` 是从 `lib/client.tpl.js` + `data/presets.json` 生成的，**不要手改 `lib/client.js`**。
@@ -14,10 +16,10 @@ node scripts/gen-client.mjs
 
 ## 新增一个字体预设
 
-1. 将 woff2 文件放入 `data/fonts/`，命名沿用 Fontsource 约定：`<family>-latin-<weight>-normal.woff2`
+1. 将 woff2 文件放入 `data/fonts/`，使用安全的单一 basename（例如 `<family>-latin-<weight>-normal.woff2`）
 2. **字体必须使用 OFL / Apache-2.0 等允许再分发的许可证**；在 `data/fonts/` 中随字体附带其许可证文本（`LICENSE-<family>-OFL.txt`），并在仓库根 `LICENSE` 的字体归属段补一条
 3. 在 `data/presets.json` 的 `presets` 数组中新增条目：`id`、`ui`/`code` 字体栈（栈尾保留 `'PingFang SC'` / `'Microsoft YaHei'` 中文回退）、`faces`（`family` + `weight` + `file`）
-4. 在 `lib/client.tpl.js` 的 zh/en 字典中补 `"font.<id>"` 标签（如无翻译需求，两侧写相同的值）
+4. 在 `lib/client.tpl.js` 的 zh/en/ja 字典中补 `"font.<id>"` 标签（如无翻译需求，各语言可写相同的值）
 5. 运行 `node scripts/gen-client.mjs`
 
 ## 上游字体同步
