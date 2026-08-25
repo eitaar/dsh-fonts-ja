@@ -1,12 +1,15 @@
 {
-  "name": "dsh-fonts",
+  "name": "dsh-font-ja",
   "version": "0.1.0",
-  "description": "Font system plugin for DeepSeek Harness: bundled OFL webfonts served offline, user-imported custom fonts, and a ctx.fonts registry other plugins can extend",
+  "description": "Japanese-aware font system plugin for DeepSeek Harness, forked from zhijun-dai/dsh-Fonts",
   "license": "MIT",
-  "author": "zhijun-dai",
+  "author": "eitaar",
+  "contributors": [
+    "zhijun-dai"
+  ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zhijun-dai/dsh-Fonts.git"
+    "url": "git+https://github.com/eitaar/dsh-font-ja.git"
   },
   "keywords": [
     "deepseek-harness", "dsh", "plugin", "dsh-plugin", "fonts",

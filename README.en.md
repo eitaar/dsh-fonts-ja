@@ -1,13 +1,13 @@
 <div align="center">
 
-# dsh-Fonts
+# dsh-font-ja
 
 **A font system plugin for DeepSeek Harness** — bundled OFL webfonts served offline, user-imported custom fonts, and a `ctx.fonts` registry other plugins can extend
 
-[![GitHub stars](https://img.shields.io/github/stars/zhijun-dai/dsh-Fonts)](https://github.com/zhijun-dai/dsh-Fonts/stargazers)
-[![GitHub issues](https://img.shields.io/github/issues/zhijun-dai/dsh-Fonts)](https://github.com/zhijun-dai/dsh-Fonts/issues)
-[![GitHub contributors](https://img.shields.io/github/contributors/zhijun-dai/dsh-Fonts)](https://github.com/zhijun-dai/dsh-Fonts/graphs/contributors)
-[![License](https://img.shields.io/github/license/zhijun-dai/dsh-Fonts)](./LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/eitaar/dsh-font-ja)](https://github.com/eitaar/dsh-font-ja/stargazers)
+[![GitHub issues](https://img.shields.io/github/issues/eitaar/dsh-font-ja)](https://github.com/eitaar/dsh-font-ja/issues)
+[![GitHub contributors](https://img.shields.io/github/contributors/eitaar/dsh-font-ja)](https://github.com/eitaar/dsh-font-ja/graphs/contributors)
+[![License](https://img.shields.io/github/license/eitaar/dsh-font-ja)](./LICENSE)
 
 English | [中文](./README.md)
 
@@ -15,7 +15,7 @@ English | [中文](./README.md)
 
 ## Overview
 
-DeepSeek Harness's web UI ships with system font stacks and no webfonts. dsh-Fonts turns fonts into a composable resource:
+DeepSeek Harness's web UI ships with system font stacks and no webfonts. dsh-font-ja is the Japanese-focused fork of [zhijun-dai/dsh-Fonts](https://github.com/zhijun-dai/dsh-Fonts):
 
 - **Bundled presets**: JetBrains Mono + Inter, Fira Code + IBM Plex Sans, and Cascadia Code ship offline. Japanese Gothic and Japanese Mincho-chat presets list system-family names only; they include no Japanese font binaries.
 - **Custom import**: configure UI, chat body, and code fonts independently; the selection persists locally
@@ -47,11 +47,14 @@ A dual-face DSH plugin: the host half serves the bundled font files, the browser
 # GitHub
 dsh plugin --profile web add github:zhijun-dai/dsh-Fonts
 
+# this fork
+dsh plugin --profile web add github:eitaar/dsh-font-ja
+
 # local directory (the profile dir is a pnpm workspace root — -w is required)
-dsh plugin --profile web add -w /path/to/dsh-Fonts
+dsh plugin --profile web add -w /path/to/dsh-font-ja
 
 # npm
-dsh plugin --profile web add dsh-fonts
+dsh plugin --profile web add dsh-font-ja
 ```
 
 Then restart `dsh web`.
@@ -88,7 +91,7 @@ Other plugins consume the font service lazily via `ctx.get("fonts")` (cross-plug
 
 ```ts
 // in your plugin's browser half
-import type { FontPreset, FontRegistry } from 'dsh-fonts/client'
+import type { FontPreset, FontRegistry } from 'dsh-font-ja/client'
 
 // register your own font preset
 const dispose = ctx.get('fonts')?.register({
@@ -132,7 +135,7 @@ Full `FontPreset` / `FontSnapshot` / `FontRegistry` types live in `lib/types/cli
 
 - The browser half provides the registry to the root context via `ctx.provide("fonts", registry)` at `apply` time
 - On selection changes it rewrites an injected `<style id="dsh-fonts-style">`: `@font-face` rules plus `:root` overrides of `--dsw-font-family` / `--dsh-fonts-chat-family` / `--ds-font-family-code`
-- The host half registers a `/plugins/dsh-fonts/fonts/*` route on `ctx.webServer`, serving the woff2 files bundled under `data/fonts/`
+- The host half keeps the compatible `/plugins/dsh-fonts/fonts/*` route on `ctx.webServer`, serving the woff2 files bundled under `data/fonts/`
 - The selection persists in `localStorage` (`dsh-fonts:prefs`) and is restored at boot; a selected plugin-registered preset falls back to the default if that plugin is absent
 
 ## Known limitations
@@ -167,6 +170,6 @@ Bundled fonts are licensed under the SIL Open Font License 1.1; license texts sh
 
 <div align="center">
 
-**dsh-Fonts** · Copyright 2026-present [zhijun-dai](https://github.com/zhijun-dai) · [MIT License](./LICENSE)
+**dsh-font-ja** · Fork of [zhijun-dai/dsh-Fonts](https://github.com/zhijun-dai/dsh-Fonts) · Copyright 2026-present [eitaar](https://github.com/eitaar) and [zhijun-dai](https://github.com/zhijun-dai) · [MIT License](./LICENSE)
 
 </div>
