@@ -1,5 +1,5 @@
 {
-  "name": "dsh-font-ja",
+  "name": "dsh-fonts-ja",
   "version": "0.1.0",
   "description": "Japanese-aware font system plugin for DeepSeek Harness, forked from zhijun-dai/dsh-Fonts",
   "license": "MIT",
@@ -9,7 +9,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/eitaar/dsh-font-ja.git"
+    "url": "git+https://github.com/eitaar/dsh-fonts-ja.git"
   },
   "keywords": [
     "deepseek-harness", "dsh", "plugin", "dsh-plugin", "fonts",

@@ -1,13 +1,13 @@
 <div align="center">
 
-# dsh-font-ja
+# dsh-fonts-ja
 
 **DeepSeek Harness 的字体系统插件** — 内置 OFL 开源字体离线分发、自定义字体导入、以及可供其他插件扩展的 `ctx.fonts` 注册表
 
-[![GitHub stars](https://img.shields.io/github/stars/eitaar/dsh-font-ja)](https://github.com/eitaar/dsh-font-ja/stargazers)
-[![GitHub issues](https://img.shields.io/github/issues/eitaar/dsh-font-ja)](https://github.com/eitaar/dsh-font-ja/issues)
-[![GitHub contributors](https://img.shields.io/github/contributors/eitaar/dsh-font-ja)](https://github.com/eitaar/dsh-font-ja/graphs/contributors)
-[![License](https://img.shields.io/github/license/eitaar/dsh-font-ja)](./LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/eitaar/dsh-fonts-ja)](https://github.com/eitaar/dsh-fonts-ja/stargazers)
+[![GitHub issues](https://img.shields.io/github/issues/eitaar/dsh-fonts-ja)](https://github.com/eitaar/dsh-fonts-ja/issues)
+[![GitHub contributors](https://img.shields.io/github/contributors/eitaar/dsh-fonts-ja)](https://github.com/eitaar/dsh-fonts-ja/graphs/contributors)
+[![License](https://img.shields.io/github/license/eitaar/dsh-fonts-ja)](./LICENSE)
 
 [English](./README.en.md) | 中文
 
@@ -15,7 +15,7 @@
 
 ## 简介
 
-DeepSeek Harness 的 Web UI 默认使用系统字体栈，没有任何内置 webfont。dsh-font-ja 是从 [zhijun-dai/dsh-Fonts](https://github.com/zhijun-dai/dsh-Fonts) fork 的日文增强版：
+DeepSeek Harness 的 Web UI 默认使用系统字体栈，没有任何内置 webfont。dsh-fonts-ja 是从 [zhijun-dai/dsh-Fonts](https://github.com/zhijun-dai/dsh-Fonts) fork 的日文增强版：
 
 - **内置预设**：JetBrains Mono + Inter、Fira Code + IBM Plex Sans、Cascadia Code 随插件包离线分发。面向日文的「日本语哥特」和「日本语明朝（聊天）」预设仅列出系统字体家族名，不包含日文字体二进制文件。
 - **自定义导入**：可分别设置 UI、聊天正文和代码三种字体；选择持久化在本机
@@ -48,13 +48,13 @@ DeepSeek Harness 的 Web UI 默认使用系统字体栈，没有任何内置 web
 dsh plugin --profile web add github:zhijun-dai/dsh-Fonts
 
 # 本 fork
-dsh plugin --profile web add github:eitaar/dsh-font-ja
+dsh plugin --profile web add github:eitaar/dsh-fonts-ja
 
 # 本地目录（profile 目录是 pnpm workspace 根，必须加 -w）
-dsh plugin --profile web add -w /path/to/dsh-font-ja
+dsh plugin --profile web add -w /path/to/dsh-fonts-ja
 
 # npm
-dsh plugin --profile web add dsh-font-ja
+dsh plugin --profile web add dsh-fonts-ja
 ```
 
 然后重启 `dsh web`。
@@ -91,7 +91,7 @@ woff2 链接：https://cdn.jsdelivr.net/npm/@fontsource/inter@5.3.0/files/inter-
 
 ```ts
 // 你的插件浏览器半边
-import type { FontPreset, FontRegistry } from 'dsh-font-ja/client'
+import type { FontPreset, FontRegistry } from 'dsh-fonts-ja/client'
 
 // 注册一套自己的字体预设
 const dispose = ctx.get('fonts')?.register({
@@ -170,6 +170,6 @@ npm run check
 
 <div align="center">
 
-**dsh-font-ja** · Fork of [zhijun-dai/dsh-Fonts](https://github.com/zhijun-dai/dsh-Fonts) · Copyright 2026-present [eitaar](https://github.com/eitaar) and [zhijun-dai](https://github.com/zhijun-dai) · [MIT License](./LICENSE)
+**dsh-fonts-ja** · Fork of [zhijun-dai/dsh-Fonts](https://github.com/zhijun-dai/dsh-Fonts) · Copyright 2026-present [eitaar](https://github.com/eitaar) and [zhijun-dai](https://github.com/zhijun-dai) · [MIT License](./LICENSE)
 
 </div>

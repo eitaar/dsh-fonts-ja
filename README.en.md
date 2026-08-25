@@ -1,13 +1,13 @@
 <div align="center">
 
-# dsh-font-ja
+# dsh-fonts-ja
 
 **A font system plugin for DeepSeek Harness** — bundled OFL webfonts served offline, user-imported custom fonts, and a `ctx.fonts` registry other plugins can extend
 
-[![GitHub stars](https://img.shields.io/github/stars/eitaar/dsh-font-ja)](https://github.com/eitaar/dsh-font-ja/stargazers)
-[![GitHub issues](https://img.shields.io/github/issues/eitaar/dsh-font-ja)](https://github.com/eitaar/dsh-font-ja/issues)
-[![GitHub contributors](https://img.shields.io/github/contributors/eitaar/dsh-font-ja)](https://github.com/eitaar/dsh-font-ja/graphs/contributors)
-[![License](https://img.shields.io/github/license/eitaar/dsh-font-ja)](./LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/eitaar/dsh-fonts-ja)](https://github.com/eitaar/dsh-fonts-ja/stargazers)
+[![GitHub issues](https://img.shields.io/github/issues/eitaar/dsh-fonts-ja)](https://github.com/eitaar/dsh-fonts-ja/issues)
+[![GitHub contributors](https://img.shields.io/github/contributors/eitaar/dsh-fonts-ja)](https://github.com/eitaar/dsh-fonts-ja/graphs/contributors)
+[![License](https://img.shields.io/github/license/eitaar/dsh-fonts-ja)](./LICENSE)
 
 English | [中文](./README.md)
 
@@ -15,7 +15,7 @@ English | [中文](./README.md)
 
 ## Overview
 
-DeepSeek Harness's web UI ships with system font stacks and no webfonts. dsh-font-ja is the Japanese-focused fork of [zhijun-dai/dsh-Fonts](https://github.com/zhijun-dai/dsh-Fonts):
+DeepSeek Harness's web UI ships with system font stacks and no webfonts. dsh-fonts-ja is the Japanese-focused fork of [zhijun-dai/dsh-Fonts](https://github.com/zhijun-dai/dsh-Fonts):
 
 - **Bundled presets**: JetBrains Mono + Inter, Fira Code + IBM Plex Sans, and Cascadia Code ship offline. Japanese Gothic and Japanese Mincho-chat presets list system-family names only; they include no Japanese font binaries.
 - **Custom import**: configure UI, chat body, and code fonts independently; the selection persists locally
@@ -48,13 +48,13 @@ A dual-face DSH plugin: the host half serves the bundled font files, the browser
 dsh plugin --profile web add github:zhijun-dai/dsh-Fonts
 
 # this fork
-dsh plugin --profile web add github:eitaar/dsh-font-ja
+dsh plugin --profile web add github:eitaar/dsh-fonts-ja
 
 # local directory (the profile dir is a pnpm workspace root — -w is required)
-dsh plugin --profile web add -w /path/to/dsh-font-ja
+dsh plugin --profile web add -w /path/to/dsh-fonts-ja
 
 # npm
-dsh plugin --profile web add dsh-font-ja
+dsh plugin --profile web add dsh-fonts-ja
 ```
 
 Then restart `dsh web`.
@@ -91,7 +91,7 @@ Other plugins consume the font service lazily via `ctx.get("fonts")` (cross-plug
 
 ```ts
 // in your plugin's browser half
-import type { FontPreset, FontRegistry } from 'dsh-font-ja/client'
+import type { FontPreset, FontRegistry } from 'dsh-fonts-ja/client'
 
 // register your own font preset
 const dispose = ctx.get('fonts')?.register({
@@ -170,6 +170,6 @@ Source code and plugin modifications are licensed under the MIT License in `LICE
 
 <div align="center">
 
-**dsh-font-ja** · Fork of [zhijun-dai/dsh-Fonts](https://github.com/zhijun-dai/dsh-Fonts) · Copyright 2026-present [eitaar](https://github.com/eitaar) and [zhijun-dai](https://github.com/zhijun-dai) · [MIT License](./LICENSE)
+**dsh-fonts-ja** · Fork of [zhijun-dai/dsh-Fonts](https://github.com/zhijun-dai/dsh-Fonts) · Copyright 2026-present [eitaar](https://github.com/eitaar) and [zhijun-dai](https://github.com/zhijun-dai) · [MIT License](./LICENSE)
 
 </div>
