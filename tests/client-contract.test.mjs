@@ -22,6 +22,14 @@ test("profile patch targets the renamed fork package while preserving the fonts 
   assert.doesNotMatch(patch, /name:\s*['"]dsh-fonts['"]/);
 });
 
+test("client bundle registers the renamed package with ModuleLoader", async () => {
+  for (const filename of ["lib/client.tpl.js", "lib/client.js"]) {
+    const client = await readFile(filename, "utf8");
+    assert.match(client, /window\.\__ModuleLoader__\.load\(\{\s*id:\s*"dsh-fonts-ja"/s, filename);
+    assert.doesNotMatch(client, /window\.\__ModuleLoader__\.load\(\{\s*id:\s*"dsh-fonts"/s, filename);
+  }
+});
+
 test("template and generated runtime migrate preferences and keep the compatibility wrapper", async () => {
   for (const filename of ["lib/client.tpl.js", "lib/client.js"]) {
     const client = await readFile(filename, "utf8");
