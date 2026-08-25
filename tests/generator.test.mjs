@@ -22,6 +22,8 @@ test("preset data contains Japanese Gothic and Mincho-chat choices", async () =>
     display: "swap",
     file: "noto-sans-jp-400-normal.woff2",
   }]);
+  assert.equal(gothic.ui[0], "Noto Sans JP");
+  assert.equal(gothic.chat[0], "Noto Sans JP");
   assert.deepEqual(mincho.faces, gothic.faces);
   assert.deepEqual(
     mincho.chat.slice(0, 2),

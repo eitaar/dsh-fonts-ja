@@ -42,8 +42,8 @@
     },
     {
       "id": "japanese-gothic",
-      "ui": ["Yu Gothic UI", "Yu Gothic", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Meiryo", "sans-serif"],
-      "chat": ["Yu Gothic UI", "Yu Gothic", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Meiryo", "sans-serif"],
+      "ui": ["Noto Sans JP", "Yu Gothic UI", "Yu Gothic", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Meiryo", "sans-serif"],
+      "chat": ["Noto Sans JP", "Yu Gothic UI", "Yu Gothic", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Meiryo", "sans-serif"],
       "code": ["UDEV Gothic 35NF", "Noto Sans Mono CJK JP", "Cascadia Mono", "Consolas", "monospace"],
       "faces": [
         { "family": "Noto Sans JP", "weight": "400", "file": "noto-sans-jp-400-normal.woff2" }
