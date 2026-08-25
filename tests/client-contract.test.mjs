@@ -15,6 +15,13 @@ test("types expose chat and the new custom-set API", async () => {
   assert.match(declarations, /clearCustom\(\): void/);
 });
 
+test("profile patch targets the renamed fork package while preserving the fonts entry id", async () => {
+  const patch = await readFile("cordis.patch.yml", "utf8");
+  assert.match(patch, /id:\s*fonts/);
+  assert.match(patch, /name:\s*['"]dsh-fonts-ja['"]/);
+  assert.doesNotMatch(patch, /name:\s*['"]dsh-fonts['"]/);
+});
+
 test("template and generated runtime migrate preferences and keep the compatibility wrapper", async () => {
   for (const filename of ["lib/client.tpl.js", "lib/client.js"]) {
     const client = await readFile(filename, "utf8");
