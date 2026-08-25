@@ -85,3 +85,11 @@ test("font preview samples wrap instead of truncating Japanese text", async () =
   assert.match(preview, /overflowWrap:\s*"anywhere"/);
   assert.doesNotMatch(preview, /textOverflow:/);
 });
+
+test("font preview cards reserve enough width for wrapped samples", async () => {
+  const template = await readFile("lib/client.tpl.js", "utf8");
+  const card = template.match(/card:\s*\{([\s\S]*?)cardSelected:/)?.[1];
+  assert.ok(card, "card styles should remain discoverable");
+  assert.match(card, /flex:\s*"1 1 176px"/);
+  assert.match(card, /minWidth:\s*"160px"/);
+});
