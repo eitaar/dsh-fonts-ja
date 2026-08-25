@@ -70,3 +70,9 @@ test("settings UI exposes three roles, source modes, and Japanese labels", async
   assert.match(template, /assertDictionaryKeyParity\(zh, en, ja\)/);
   assert.match(template, /ctx\.locale\.register\(SETTINGS_NS,\s*\{\s*zh,\s*en,\s*ja/s);
 });
+
+test("font preview keeps Japanese role labels on one readable line", async () => {
+  const template = await readFile("lib/client.tpl.js", "utf8");
+  assert.match(template, /previewLabel:\s*\{[\s\S]*?flex:\s*"0 0 42px"[\s\S]*?whiteSpace:\s*"nowrap"/);
+  assert.match(template, /previewSample:\s*\{[\s\S]*?fontSize:\s*"13px"/);
+});
