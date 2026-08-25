@@ -76,3 +76,12 @@ test("font preview keeps Japanese role labels on one readable line", async () =>
   assert.match(template, /previewLabel:\s*\{[\s\S]*?flex:\s*"0 0 42px"[\s\S]*?whiteSpace:\s*"nowrap"/);
   assert.match(template, /previewSample:\s*\{[\s\S]*?fontSize:\s*"13px"/);
 });
+
+test("font preview samples wrap instead of truncating Japanese text", async () => {
+  const template = await readFile("lib/client.tpl.js", "utf8");
+  const preview = template.match(/previewSample:\s*\{([\s\S]*?)\n\s*\},\n\s*sourceModes:/)?.[1];
+  assert.ok(preview, "previewSample styles should remain discoverable");
+  assert.match(preview, /whiteSpace:\s*"normal"/);
+  assert.match(preview, /overflowWrap:\s*"anywhere"/);
+  assert.doesNotMatch(preview, /textOverflow:/);
+});
