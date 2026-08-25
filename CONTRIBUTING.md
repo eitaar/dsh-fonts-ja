@@ -1,32 +1,60 @@
-# Contributing
+# コントリビューションガイド
 
-日本語の手順は [CONTRIBUTING.ja.md](./CONTRIBUTING.ja.md) を参照してください。
+このリポジトリでは、DeepSeek Harness の UI・チャット・コードフォントを安全に配布できる形で改善します。大きな変更を始める前に Issue で目的と互換性への影響を共有してください。
 
-## 再生成流程
-
-`lib/client.js` 是从 `lib/client.tpl.js` + `data/presets.json` 生成的，**不要手改 `lib/client.js`**。
-
-修改预设数据（`data/presets.json`）或模板后，在仓库根目录运行：
+## 開発環境
 
 ```sh
-node scripts/gen-client.mjs
+npm install
+npm run check
 ```
 
-同时提交生成器改动与再生成的 `lib/client.js`。
+`lib/client.js` は生成物です。`lib/client.tpl.js`、`scripts/font-config.mjs`、`data/presets.json` を変更したら、リポジトリのルートで次を実行して生成物を更新します。
 
-## 新增一个字体预设
+```sh
+npm run generate
+npm run check
+```
 
-1. 将 woff2 文件放入 `data/fonts/`，使用安全的单一 basename（例如 `<family>-latin-<weight>-normal.woff2`）
-2. **字体必须使用 OFL / Apache-2.0 等允许再分发的许可证**；在 `data/fonts/` 中随字体附带其许可证文本（`LICENSE-<family>-OFL.txt`），并在仓库根 `LICENSE` 的字体归属段补一条
-3. 在 `data/presets.json` 的 `presets` 数组中新增条目：`id`、`ui`/`code` 字体栈（栈尾保留 `'PingFang SC'` / `'Microsoft YaHei'` 中文回退）、`faces`（`family` + `weight` + `file`）
-4. 在 `lib/client.tpl.js` 的 zh/en/ja 字典中补 `"font.<id>"` 标签（如无翻译需求，各语言可写相同的值）
-5. 运行 `node scripts/gen-client.mjs`
+## フォントを追加・更新する
 
-## 上游字体同步
+1. 再配布が許可されたフォントだけを `data/fonts/` に追加します。OFL 1.1、Apache-2.0 などのライセンスを確認し、フォント単体の販売を制限する条項や予約フォント名なども尊重してください。
+2. フォントファイルと同じディレクトリに完全なライセンス本文を置きます。既存の命名に合わせて `LICENSE-<font>-OFL.txt` のようにし、`LICENSE-FONTS.md` に作者・配布元・ライセンスを追記します。
+3. WOFF2 のファイル名は安全な単一 basename（`A-Za-z0-9`、`.`、`_`、`-`）にし、`data/presets.json` の `faces` に `family`、`weight`、`file` を登録します。`file` は `data/fonts/` 内のファイル名だけを指定します。
+4. UI・チャット・コードのどの役割で使うかをスタックにも追加します。日本語用プリセットでは、同梱フォントの後ろに端末依存のフォールバックを残してください。
+5. 新しいプリセットを追加した場合は、`lib/client.tpl.js` の zh/en/ja 辞書に `font.<id>` の表示名を追加します。
+6. `npm run generate` で `lib/client.js` を更新し、テストとパッケージ内容を確認します。
 
-捆绑字体来自 [Fontsource](https://fontsource.org)（`@fontsource/<family>@5.3.0` 的 `files/<family>-latin-<weight>-normal.woff2`），许可证文本来自各字体的上游仓库。更新字体时同步三处：字体文件、`LICENSE-*.txt`、根 `LICENSE` 归属段。
+### Noto Sans JP の扱い
 
-## 代码风格
+このフォークには Noto CJK の日本語 Regular を `noto-sans-jp-400-normal.woff2` として同梱しています。元データは [notofonts/noto-cjk](https://github.com/notofonts/noto-cjk) の公式配布物を使い、`data/fonts/LICENSE-noto-sans-jp-OFL.txt` の SIL Open Font License 1.1 を必ず一緒に配布します。
 
-- 浏览器半边保持手写的 `window.__ModuleLoader__` CJS 格式（无构建步骤），与随包发布的 ui-* 包同构
-- 命名即文档，只在 WHY 不明显处加注释
+Noto Sans JP は日本語グリフを広く含むため、Latin サブセットよりファイルサイズが大きくなります。不要な重みや重複したサブセットを追加せず、変更時は `npm pack --dry-run` でパッケージサイズと同梱ファイルを確認してください。
+
+Windows/macOS に付属する Yu Gothic、Meiryo、Hiragino などのシステムフォントは、ライセンスを確認せずバイナリ化して同梱しないでください。プリセットのフォールバック名として列挙するだけにします。
+
+## 動作確認
+
+変更前後で次を実行してください。
+
+```sh
+npm run check
+npm pack --dry-run
+git diff --check
+```
+
+プリセット変更では、少なくとも次を手動でも確認します。
+
+- 日本語ゴシックで UI とチャット本文の両方に Noto Sans JP が適用される
+- 日本語明朝（チャット）で UI とチャット本文が別のスタックになる
+- デフォルトへ戻すとシステムフォントへ復元される
+- リロード後も選択状態が保持される
+
+## プルリクエスト
+
+- 変更理由と対象ロール（UI / chat / code）を説明する
+- フォントファイル、ライセンス本文、帰属表記、プリセット、生成物を同じ変更に含める
+- `npm run check` の結果と、フォントを実際に表示した環境を記載する
+- 生成された `lib/client.js` を手編集していないことを確認する
+
+不明なライセンスや配布元がある場合は、ファイルをコミットする前に Issue で相談してください。
