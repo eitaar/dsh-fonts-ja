@@ -79,7 +79,7 @@ test("font preview uses compact Japanese copy for a two-line card", async () => 
 test("font preview keeps Japanese role labels on one readable line", async () => {
   const template = await readFile("lib/client.tpl.js", "utf8");
   assert.match(template, /previewLabel:\s*\{[\s\S]*?flex:\s*"0 0 42px"[\s\S]*?whiteSpace:\s*"nowrap"/);
-  assert.match(template, /previewSample:\s*\{[\s\S]*?fontSize:\s*"13px"/);
+  assert.match(template, /previewSample:\s*\{[\s\S]*?fontSize:\s*"12px"/);
 });
 
 test("font preview samples wrap instead of truncating Japanese text", async () => {
@@ -97,4 +97,10 @@ test("font preview cards reserve enough width for wrapped samples", async () => 
   assert.ok(card, "card styles should remain discoverable");
   assert.match(card, /flex:\s*"1 1 176px"/);
   assert.match(card, /minWidth:\s*"160px"/);
+});
+
+test("font preview cards keep a compact vertical rhythm", async () => {
+  const template = await readFile("lib/client.tpl.js", "utf8");
+  assert.match(template, /swatch:\s*\{[\s\S]*?padding:\s*"6px 8px"/);
+  assert.match(template, /previewSample:\s*\{[\s\S]*?lineHeight:\s*"16px"/);
 });
