@@ -154,7 +154,7 @@ npm run check
 
 ## Font credits
 
-Bundled fonts are licensed under the SIL Open Font License 1.1; license texts ship in `data/fonts/LICENSE-*.txt`:
+Source code and plugin modifications are licensed under the MIT License in `LICENSE`. Bundled fonts are separately licensed under the SIL Open Font License 1.1; attribution is in `LICENSE-FONTS.md` and complete license texts ship in `data/fonts/LICENSE-*.txt`:
 
 - [JetBrains Mono](https://github.com/JetBrains/JetBrainsMono) — JetBrains s.r.o.
 - [Inter](https://github.com/rsms/inter) — Rasmus Andersson

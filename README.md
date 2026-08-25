@@ -154,7 +154,7 @@ npm run check
 
 ## 字体致谢
 
-捆绑字体均以 SIL Open Font License 1.1 授权，许可证文本随包分发于 `data/fonts/LICENSE-*.txt`：
+源代码和插件修改以 `LICENSE` 中的 MIT License 授权。捆绑字体另以 SIL Open Font License 1.1 授权，归属说明见 `LICENSE-FONTS.md`，完整许可证文本随包分发于 `data/fonts/LICENSE-*.txt`：
 
 - [JetBrains Mono](https://github.com/JetBrains/JetBrainsMono) — JetBrains s.r.o.
 - [Inter](https://github.com/rsms/inter) — Rasmus Andersson
